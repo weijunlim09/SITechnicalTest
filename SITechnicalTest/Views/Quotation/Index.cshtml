@@ -1,0 +1,51 @@
+﻿@model List<IGrouping<int, DbQuotation>>
+<div class="container">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">Quotation List</h2>
+        </div>
+        <div class="col-6 text-end p-4">
+            <a asp-controller="Quotation" asp-action="Create" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Create
+            </a>
+        </div>
+    </div>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Supplier Name</th>
+                <th>Products</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var sortedGroups = Model.OrderByDescending(group => group.First().SupplierId); // Sort groups by supplier name (key)
+            }
+            @foreach (var group in sortedGroups)
+            {
+                // Sort the items within the group by product (descending) and then by description
+                var sortedItems = group.OrderByDescending(item => item.Product);
+                foreach (var item in sortedItems)
+                {
+                    <tr>
+                        @if (item == sortedItems.First()) // Display the supplier name in the first row of each group
+                        {
+                            <td rowspan="@group.Count()">@group.First().SupplierId</td>
+                        }
+                        <td>
+                            @item.Product: $@item.CostPerUnit
+                            <a asp-controller="Quotation" asp-action="Update" asp-route-QuotationId="@item.QuotationId" class="btn btn-primary mx-2"> 
+                                <span>Edit</span>
+                            </a>
+                            <a asp-controller="Quotation" asp-action="Delete" asp-route-QuotationId="@item.QuotationId" class="btn btn-primary mx-2">
+                                <span>Delete</span>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+</div>
