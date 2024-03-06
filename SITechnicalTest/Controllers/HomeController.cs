@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using OfficeOpenXml;
 using SITechnicalTest.Data;
 using SITechnicalTest.Models;
+using SITechnicalTest_API.Models;
 using System.Diagnostics;
 
 namespace SITechnicalTest.Controllers
@@ -9,20 +10,20 @@ namespace SITechnicalTest.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly ApplicationDbContext _db;
         private readonly IWebHostEnvironment _environment;
+        private static List<Supplier> Suppliers = new List<Supplier>();
+        private static List<Quotation> Quotations = new List<Quotation>();
 
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext db, IWebHostEnvironment env)
+        public HomeController(ILogger<HomeController> logger, IWebHostEnvironment env)
         {
             _logger = logger;
-            _db = db;
             _environment = env;
         }
 
         public IActionResult Index()
         {
-            List<DbSupplier> suppliers = _db.Suppliers.ToList();
-            foreach (DbSupplier supplier in suppliers)
+            List<Supplier> suppliers = _db.Suppliers.ToList();
+            foreach (Supplier supplier in suppliers)
             {
                 if (supplier.CountryCode == "GB")
                 {

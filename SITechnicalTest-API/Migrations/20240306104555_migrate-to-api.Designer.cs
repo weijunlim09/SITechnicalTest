@@ -5,15 +5,15 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SITechnicalTest.Data;
+using SITechnicalTest_API.Data;
 
 #nullable disable
 
-namespace SITechnicalTest.Migrations
+namespace SITechnicalTest_API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240304094812_update-cost-nullable")]
-    partial class updatecostnullable
+    [Migration("20240306104555_migrate-to-api")]
+    partial class migratetoapi
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace SITechnicalTest.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("SITechnicalTest.Models.DbQuotation", b =>
+            modelBuilder.Entity("SITechnicalTest_API.Models.Quotation", b =>
                 {
                     b.Property<int>("QuotationId")
                         .ValueGeneratedOnAdd()
@@ -37,7 +37,6 @@ namespace SITechnicalTest.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Product")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SupplierId")
@@ -50,7 +49,7 @@ namespace SITechnicalTest.Migrations
                     b.ToTable("Quotations");
                 });
 
-            modelBuilder.Entity("SITechnicalTest.Models.DbSupplier", b =>
+            modelBuilder.Entity("SITechnicalTest_API.Models.Supplier", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -75,53 +74,11 @@ namespace SITechnicalTest.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Suppliers");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CountryCode = "GB",
-                            DateCreated = new DateTime(2021, 8, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "supplier1@gmail.com",
-                            Name = "Supplier1"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CountryCode = "JP",
-                            DateCreated = new DateTime(2021, 8, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "supplier2@gmail.com",
-                            Name = "Supplier2"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CountryCode = "GB",
-                            DateCreated = new DateTime(2021, 8, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "supplier3@gmail.com",
-                            Name = "Supplier3"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CountryCode = "GB",
-                            DateCreated = new DateTime(2021, 8, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "supplier4@gmail.com",
-                            Name = "Supplier4"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CountryCode = "JP",
-                            DateCreated = new DateTime(2021, 8, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "supplier5@gmail.com",
-                            Name = "Supplier5"
-                        });
                 });
 
-            modelBuilder.Entity("SITechnicalTest.Models.DbQuotation", b =>
+            modelBuilder.Entity("SITechnicalTest_API.Models.Quotation", b =>
                 {
-                    b.HasOne("SITechnicalTest.Models.DbSupplier", "Supplier")
+                    b.HasOne("SITechnicalTest_API.Models.Supplier", "Supplier")
                         .WithMany("Quotations")
                         .HasForeignKey("SupplierId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -130,7 +87,7 @@ namespace SITechnicalTest.Migrations
                     b.Navigation("Supplier");
                 });
 
-            modelBuilder.Entity("SITechnicalTest.Models.DbSupplier", b =>
+            modelBuilder.Entity("SITechnicalTest_API.Models.Supplier", b =>
                 {
                     b.Navigation("Quotations");
                 });

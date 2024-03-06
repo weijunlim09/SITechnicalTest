@@ -1,27 +1,31 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace SITechnicalTest.Migrations
+namespace SITechnicalTest_API.Migrations
 {
     /// <inheritdoc />
-    public partial class addsupplierquotationrelationship : Migration
+    public partial class migratetoapi : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_DbSuppliers",
-                table: "DbSuppliers");
-
-            migrationBuilder.RenameTable(
-                name: "DbSuppliers",
-                newName: "Suppliers");
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_Suppliers",
-                table: "Suppliers",
-                column: "Id");
+            migrationBuilder.CreateTable(
+                name: "Suppliers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CountryCode = table.Column<string>(type: "nvarchar(2)", maxLength: 2, nullable: false),
+                    DateCreated = table.Column<DateTime>(type: "date", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Suppliers", x => x.Id);
+                });
 
             migrationBuilder.CreateTable(
                 name: "Quotations",
@@ -30,8 +34,8 @@ namespace SITechnicalTest.Migrations
                     QuotationId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     SupplierId = table.Column<int>(type: "int", nullable: false),
-                    Product = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CostPerUnit = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    Product = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CostPerUnit = table.Column<decimal>(type: "decimal(18,2)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -56,18 +60,8 @@ namespace SITechnicalTest.Migrations
             migrationBuilder.DropTable(
                 name: "Quotations");
 
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_Suppliers",
-                table: "Suppliers");
-
-            migrationBuilder.RenameTable(
-                name: "Suppliers",
-                newName: "DbSuppliers");
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_DbSuppliers",
-                table: "DbSuppliers",
-                column: "Id");
+            migrationBuilder.DropTable(
+                name: "Suppliers");
         }
     }
 }
