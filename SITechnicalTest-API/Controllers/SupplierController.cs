@@ -18,60 +18,51 @@ namespace SITechnicalTest_API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public IActionResult Get()
         {
-            List<Supplier> suppliers = await _db.Suppliers.ToListAsync();
+            List<Supplier> suppliers = _db.Suppliers.ToList();
             return Ok(suppliers);
         }
+        
         [HttpGet("id")]
-        public async Task<IActionResult> GetByID([FromQuery] int id)
+        public IActionResult GetByID([FromQuery] int id)
         {
-            Supplier? supplier = await _db.Suppliers.FindAsync(id);
+            Supplier? supplier = _db.Suppliers.Find(id);
             if (supplier == null) return NotFound();
             return Ok(supplier);
         }
+        
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] Supplier supplier)
+        public IActionResult Create([FromBody] Supplier supplier)
         {
-            if (supplier == null) return BadRequest();
             _db.Suppliers.Add(supplier);
-            await _db.SaveChangesAsync();
+            _db.SaveChanges();
             return NoContent();
         }
+        
         [HttpPut]
-        public async Task<IActionResult> Put([FromQuery] int id, [FromBody] Supplier supplier)
+        public IActionResult Put([FromQuery] int id, [FromBody] Supplier updatedSupplier)
         {
-            if (supplier == null) return BadRequest();
-            Supplier? sup = await _db.Suppliers.FindAsync(id);
-            if (sup == null) return NotFound();
-            _db.Update(supplier);
-            await _db.SaveChangesAsync();
+            Supplier? existingSupplier = _db.Suppliers.Find(id);
+
+            if (existingSupplier == null) return NotFound();
+            existingSupplier.Name = updatedSupplier.Name;
+            existingSupplier.Email = updatedSupplier.Email;
+            existingSupplier.CountryCode = updatedSupplier.CountryCode;
+            _db.Suppliers.Update(existingSupplier);
+            _db.SaveChanges();
+
             return NoContent();
         }
-        [HttpPatch]
-        public async Task<IActionResult> Patch([FromQuery] int id, [FromBody] Supplier supplier)
-        {
-            if (supplier == null) return BadRequest();
-            Supplier? sup = await _db.Suppliers.FindAsync(id);
-            if (sup == null) return NotFound();
-
-            if (supplier.Name != null) sup.Name = supplier.Name;
-            if (supplier.Email != null) sup.Email = supplier.Email;
-            if (supplier.CountryCode != null) sup.CountryCode = supplier.CountryCode;
-            if (supplier.Quotations != null) sup.Quotations = supplier.Quotations;
-
-            await _db.SaveChangesAsync();
-            return NoContent();
-        }
+        
         [HttpDelete]
-        public async Task<IActionResult> Delete([FromQuery] int id)
+        public IActionResult Delete([FromQuery] int id)
         {
             if (id < 0) return BadRequest();
-
-            Supplier? sup = await _db.Suppliers.FindAsync(id);
+            Supplier? sup = _db.Suppliers.Find(id);
             if (sup == null) return NotFound(id);
             _db.Suppliers.Remove(sup);
-            await _db.SaveChangesAsync();
+            _db.SaveChanges();
             return NoContent();
         }
     }
