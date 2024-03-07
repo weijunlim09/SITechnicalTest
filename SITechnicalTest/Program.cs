@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
-using SITechnicalTest.Data;
+using SITechnicalTest.Interfaces;
+using SITechnicalTest.Services;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,10 +10,11 @@ ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+builder.Services.AddHttpClient<ISupplierService, SupplierService>(client =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    client.BaseAddress = new Uri($"{builder.Configuration["APIBaseAddress"]}");
 });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

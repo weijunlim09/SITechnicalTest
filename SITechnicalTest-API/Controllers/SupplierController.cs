@@ -17,14 +17,14 @@ namespace SITechnicalTest_API.Controllers
             _db = db;
         }
 
-        [HttpGet]
+        [HttpGet("GetAll")]
         public IActionResult Get()
         {
             List<Supplier> suppliers = _db.Suppliers.ToList();
             return Ok(suppliers);
         }
-        
-        [HttpGet("id")]
+
+        [HttpGet("GetByID")]
         public IActionResult GetByID([FromQuery] int id)
         {
             Supplier? supplier = _db.Suppliers.Find(id);
@@ -41,9 +41,9 @@ namespace SITechnicalTest_API.Controllers
         }
         
         [HttpPut]
-        public IActionResult Put([FromQuery] int id, [FromBody] Supplier updatedSupplier)
+        public IActionResult Put([FromBody] Supplier updatedSupplier)
         {
-            Supplier? existingSupplier = _db.Suppliers.Find(id);
+            Supplier? existingSupplier = _db.Suppliers.Find(updatedSupplier.Id);
 
             if (existingSupplier == null) return NotFound();
             existingSupplier.Name = updatedSupplier.Name;

@@ -1,4 +1,4 @@
-﻿@model List<DbSupplier> 
+﻿@model List<Supplier> 
 <div>
     <div class="row pt-4">
         <div class="col-6">
@@ -26,10 +26,18 @@
             @foreach (var obj in Model.OrderByDescending(a => a.Name).OrderByDescending(c => c.DateCreated).OrderBy(x => x.CountryCode))
             {
                 <tr>
+                    <td>@obj.Id</td>
                     <td>@obj.Name</td>
                     <td>@obj.Email</td>
                     <td>@obj.CountryCode</td>
                     <td>@obj.DateCreated.ToString("dd-MMM-yyyy")</td>
+                    <td>
+                        <div class="w-75 btn-group" role="group">
+                            <a asp-controller="Home" asp-action="Preview" asp-route-id="@obj.Id" class="btn btn-primary mx-2">
+                                <span>View</span>
+                            </a>
+                        </div>
+                    </td>
                     <td>
                         <div class="w-75 btn-group" role="group">
                             <a asp-controller="Home" asp-action="Update" asp-route-id="@obj.Id" class="btn btn-primary mx-2">

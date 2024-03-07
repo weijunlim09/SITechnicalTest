@@ -1,12 +1,7 @@
-﻿@model CompositeSupplierQuotation
+﻿@* @model CompositeSupplierQuotation
 
 
 <form method="post">
-    @*
-    Must put this for pk,
-    if not entity framework will treat it as new data to insert,
-    not update existing
-    *@
     <input asp-for="Quotation.QuotationId" hidden />
     <div class="border p-3 mt-4">
         <div class="row pb-2">
@@ -45,3 +40,4 @@
     </div>
 
 </form>
+ *@

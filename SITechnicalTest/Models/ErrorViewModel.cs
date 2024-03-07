@@ -1,4 +1,4 @@
-namespace SITechnicalTest.Models
+﻿namespace SITechnicalTest.Models
 {
     public class ErrorViewModel
     {
