@@ -30,7 +30,7 @@
                     <tr>
                         @if(item == items.First())
                         {
-                            <td rowspan="@group.Count()">@group.First().Supplier.Name</td>
+                            <td rowspan="@group.Count()">@group.First().Supplier?.Name</td>
                         }
                         @if(item.CostPerUnit != null)
                         {
@@ -39,10 +39,10 @@
                                 <a asp-controller="Quotation" asp-action="Preview" asp-route-QuotationId="@item.QuotationId" class="btn btn-primary mx-2">
                                     <span>Show</span>
                                 </a>
-                                <a asp-controller="Quotation" asp-action="Update" asp-route-QuotationId="@item.QuotationId" class="btn btn-primary mx-2">
+                                <a asp-controller="Quotation" asp-action="Edit" asp-route-QuotationId="@item.QuotationId" class="btn btn-primary mx-2">
                                     <span>Edit</span>
                                 </a>
-                                <a asp-controller="Quotation" asp-action="Delete" asp-route-QuotationId="@item.QuotationId" class="btn btn-primary mx-2">
+                                <a asp-controller="Quotation" asp-action="Remove" asp-route-QuotationId="@item.QuotationId" class="btn btn-primary mx-2">
                                     <span>Delete</span>
                                 </a>
                             </td>

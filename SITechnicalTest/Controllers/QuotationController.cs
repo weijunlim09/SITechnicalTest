@@ -50,7 +50,7 @@ namespace SITechnicalTest.Controllers
 
         #region Update
         [HttpGet]
-        public async Task<IActionResult> Update(int QuotationId)
+        public async Task<IActionResult> Edit(int QuotationId)
         {
             Quotation quotation = await _quotationService.GetByID(QuotationId);
             ViewBag.Suppliers = await _supplierService.Get();
@@ -58,7 +58,7 @@ namespace SITechnicalTest.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Update(Quotation updatedQuotation)
+        public async Task<IActionResult> Edit(Quotation updatedQuotation)
         {
             bool isSuccess = await _quotationService.Update(updatedQuotation);
             if (isSuccess) return RedirectToAction("Index");
@@ -69,14 +69,14 @@ namespace SITechnicalTest.Controllers
 
         #region Delete
         [HttpGet]
-        public async Task<IActionResult> Delete(int QuotationId)
+        public async Task<IActionResult> Remove(int QuotationId)
         {
             Quotation quotation = await _quotationService.GetByID(QuotationId);
             return View(quotation);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(Quotation toBeRemovedQuotation)
+        public async Task<IActionResult> Remove(Quotation toBeRemovedQuotation)
         {
             bool isSuccess = await _quotationService.Delete(toBeRemovedQuotation);
             if (isSuccess) return RedirectToAction("Index");

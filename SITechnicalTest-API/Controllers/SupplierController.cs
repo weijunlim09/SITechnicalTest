@@ -21,7 +21,7 @@ namespace SITechnicalTest_API.Controllers
         [HttpGet("GetAll")]
         public async Task<IActionResult> Get()
         {
-            IEnumerable<Supplier> suppliers = await _unitOfWork.SupplierRepository.GetAll();
+            List<Supplier> suppliers = await _unitOfWork.SupplierRepository.GetAll();
             return Ok(suppliers);
         }
 

@@ -8,12 +8,14 @@ namespace SITechnicalTest_API.Data
         private readonly ApplicationDbContext _context;
 
         public ISupplierRepository SupplierRepository { get; private set; }
+        public IQuotationRepository QuotationRepository { get; private set; }   
 
         public UnitOfWork(ApplicationDbContext context, ILoggerFactory loggerFactory)
         {
             _context = context;
             var _logger = loggerFactory.CreateLogger("logs");
             SupplierRepository = new SupplierRepository(_context, _logger);
+            QuotationRepository = new QuotationRepository(_context, _logger);   
         }
 
         public async Task CompleteAsync()

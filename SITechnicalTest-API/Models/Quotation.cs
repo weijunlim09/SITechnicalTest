@@ -13,7 +13,6 @@ namespace SITechnicalTest_API.Models
         public string? Product { get; set; }
         [Column(TypeName = "decimal(18, 2)")]
         public decimal? CostPerUnit { get; set; }
-        [JsonIgnore]
         public Supplier? Supplier { get; set; }
     }
 }

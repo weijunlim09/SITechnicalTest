@@ -3,6 +3,7 @@
     public interface IUnitOfWork
     {
         ISupplierRepository SupplierRepository { get; }
+        IQuotationRepository QuotationRepository { get; }
         Task CompleteAsync();
     }
 }

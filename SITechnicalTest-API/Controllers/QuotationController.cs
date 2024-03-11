@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SITechnicalTest_API.Core;
 using SITechnicalTest_API.Data;
 using SITechnicalTest_API.Models;
 
@@ -9,64 +10,58 @@ namespace SITechnicalTest_API.Controllers
     [Route("[controller]")]
     public class QuotationController : ControllerBase
     {
-        private readonly ApplicationDbContext _db;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public QuotationController(ILogger<QuotationController> logger, ApplicationDbContext db)
+        public QuotationController(IUnitOfWork unitOfWork)
         {
-            _db = db;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet("GetAll")]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            List<Quotation> quotations = _db.Quotations.ToList();
-            foreach(Quotation quotation in quotations)
+            List<Quotation> quotations = await _unitOfWork.QuotationRepository.GetAll();
+            foreach (Quotation quotation in quotations)
             {
-                quotation.Supplier = _db.Suppliers.Find(quotation.SupplierId);
+                quotation.Supplier = await _unitOfWork.SupplierRepository.GetByID(quotation.SupplierId);
             }
             return Ok(quotations);
         }
 
         [HttpGet("GetByID")]
-        public IActionResult GetByID([FromQuery] int id)
+        public async Task<IActionResult> GetByID([FromQuery] int id)
         {
-            Quotation? quotation = _db.Quotations.Find(id);
+            Quotation? quotation = await _unitOfWork.QuotationRepository.GetByID(id);
             if (quotation == null) return NotFound();
-            quotation.Supplier = _db.Suppliers.Find(quotation.SupplierId);
+            quotation.Supplier = await _unitOfWork.SupplierRepository.GetByID(quotation.SupplierId);
             return Ok(quotation);
         }
 
 
         [HttpPost]
-        public IActionResult Create([FromBody] Quotation quotation)
+        public async Task<IActionResult> Create([FromBody] Quotation quotation)
         {
-            _db.Quotations.Add(quotation);
-            _db.SaveChanges();
+            await _unitOfWork.QuotationRepository.Add(quotation);
+            await _unitOfWork.CompleteAsync();
             return NoContent();
         }
 
         [HttpPut]
-        public IActionResult Put([FromBody] Quotation updatedQuotation)
+        public async Task<IActionResult> Update([FromBody] Quotation updatedQuotation)
         {
-            Quotation? existingQuotation = _db.Quotations.Find(updatedQuotation.QuotationId);
-
-            if (existingQuotation == null) return NotFound();
-            existingQuotation.Product = updatedQuotation.Product;   
-            existingQuotation.CostPerUnit = updatedQuotation.CostPerUnit;
-            existingQuotation.SupplierId = updatedQuotation.SupplierId; 
-            _db.Quotations.Update(existingQuotation);
-            _db.SaveChanges();
+            await _unitOfWork.QuotationRepository.Update(updatedQuotation);
+            await _unitOfWork.CompleteAsync();
             return NoContent();
         }
 
         [HttpDelete]
-        public IActionResult Delete([FromQuery] int id)
+        public async Task<IActionResult> Delete([FromQuery] int id)
         {
             if (id < 0) return BadRequest();
-            Quotation? existingQuotation = _db.Quotations.Find(id);
-            if (existingQuotation == null) return NotFound(id);
-            _db.Quotations.Remove(existingQuotation);
-            _db.SaveChanges();
+            Quotation? quoatation = await _unitOfWork.QuotationRepository.GetByID(id);
+            if (quoatation == null) return NotFound();
+            await _unitOfWork.QuotationRepository.Delete(quoatation);
+            await _unitOfWork.CompleteAsync();
             return NoContent();
         }
 
