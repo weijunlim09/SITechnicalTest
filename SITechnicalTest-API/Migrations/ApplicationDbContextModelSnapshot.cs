@@ -31,7 +31,7 @@ namespace SITechnicalTest_API.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("QuotationId"));
 
                     b.Property<decimal?>("CostPerUnit")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<string>("Product")
                         .HasColumnType("nvarchar(max)");
@@ -71,6 +71,48 @@ namespace SITechnicalTest_API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Suppliers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 5,
+                            CountryCode = "JP",
+                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "supplier5@gmail.com",
+                            Name = "Supplier5"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CountryCode = "JP",
+                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "supplier2@gmail.com",
+                            Name = "Supplier2"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CountryCode = "GB",
+                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "supplier4@gmail.com",
+                            Name = "Supplier4"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CountryCode = "GB",
+                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "supplier3@gmail.com",
+                            Name = "Supplier3"
+                        },
+                        new
+                        {
+                            Id = 1,
+                            CountryCode = "GB",
+                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "supplier1@gmail.com",
+                            Name = "Supplier1"
+                        });
                 });
 
             modelBuilder.Entity("SITechnicalTest_API.Models.Quotation", b =>

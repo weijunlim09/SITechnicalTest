@@ -14,6 +14,10 @@ builder.Services.AddHttpClient<ISupplierService, SupplierService>(client =>
 {
     client.BaseAddress = new Uri($"{builder.Configuration["APIBaseAddress"]}");
 });
+builder.Services.AddHttpClient<IQuotationService, QuotationService>(client =>
+{
+    client.BaseAddress = new Uri($"{builder.Configuration["APIBaseAddress"]}");
+});
 
 var app = builder.Build();
 

@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace SITechnicalTest_API.Migrations
 {
     /// <inheritdoc />
-    public partial class migratetoapi : Migration
+    public partial class seedtabledata : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -46,6 +48,18 @@ namespace SITechnicalTest_API.Migrations
                         principalTable: "Suppliers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Suppliers",
+                columns: new[] { "Id", "CountryCode", "DateCreated", "Email", "Name" },
+                values: new object[,]
+                {
+                    { 1, "GB", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "supplier1@gmail.com", "Supplier1" },
+                    { 2, "JP", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "supplier2@gmail.com", "Supplier2" },
+                    { 3, "GB", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "supplier3@gmail.com", "Supplier3" },
+                    { 4, "GB", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "supplier4@gmail.com", "Supplier4" },
+                    { 5, "JP", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "supplier5@gmail.com", "Supplier5" }
                 });
 
             migrationBuilder.CreateIndex(

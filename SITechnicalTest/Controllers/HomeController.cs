@@ -17,6 +17,7 @@ namespace SITechnicalTest.Controllers
             _environment = env;
             _supplierService = supplierService;
         }
+        
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -28,7 +29,7 @@ namespace SITechnicalTest.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            return View();
+            return View(new Supplier());
         }
 
         [HttpPost]
@@ -75,6 +76,7 @@ namespace SITechnicalTest.Controllers
 
         #endregion
 
+        #region Delete
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
@@ -90,6 +92,8 @@ namespace SITechnicalTest.Controllers
             return View(supplier);
         }
 
+        #endregion
+        
         public ActionResult ExportToCSV()
         {
             return RedirectToAction("Index", "Home");

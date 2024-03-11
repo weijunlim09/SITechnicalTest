@@ -1,32 +1,35 @@
-﻿@* @model CompositeSupplierQuotation
+﻿@model Quotation
 
 
 <form method="post">
-    <input asp-for="Quotation.QuotationId" hidden />
+    <input asp-for="QuotationId" hidden />
     <div class="border p-3 mt-4">
         <div class="row pb-2">
             <h2 class="text-primary">
-                Update Quotation
+                Update Quotation @Model.QuotationId
             </h2>
             <hr />
         </div>
 
         <div class="mb-3 row p-1">
-            <label for="SupplierId" class="p-0">Supplier</label>
-            <select asp-for="Quotation.SupplierId" asp-items="Model.Suppliers.Select(s => new SelectListItem { Value = s.Id.ToString(), Text = s.Name })" class="form-control">
+            <select asp-for="SupplierId" class="form-control">
                 <option value="">Select Supplier</option>
+                @foreach (Supplier supplier in ViewBag.Suppliers)
+                {
+                    <option value="@supplier.Id">@supplier.Id - @supplier.Name</option>
+                }
             </select>
-            <span asp-validation-for="Quotation.SupplierId" class="text-danger"></span>
+            <span asp-validation-for="SupplierId" class="text-danger"></span>
         </div>
 
         <div class="mb-3 row p-1">
-            <label asp-for="Quotation.Product" class="p-0"></label>
-            <input asp-for="Quotation.Product" class="form-control" />
+            <label asp-for="Product" class="p-0"></label>
+            <input asp-for="Product" class="form-control" />
         </div>
 
         <div class="mb-3 row p-1">
-            <label asp-for="Quotation.CostPerUnit" class="p-0"></label>
-            <input asp-for="Quotation.CostPerUnit" class="form-control" />
+            <label asp-for="CostPerUnit" class="p-0"></label>
+            <input asp-for="CostPerUnit" class="form-control" />
         </div>
 
         <div class="row">
@@ -40,4 +43,3 @@
     </div>
 
 </form>
- *@

@@ -9,29 +9,33 @@ namespace SITechnicalTest_API.Controllers
     [Route("[controller]")]
     public class QuotationController : ControllerBase
     {
-        private readonly ILogger<QuotationController> _logger;
         private readonly ApplicationDbContext _db;
 
         public QuotationController(ILogger<QuotationController> logger, ApplicationDbContext db)
         {
             _db = db;
-            _logger = logger;
         }
 
-        [HttpGet]
+        [HttpGet("GetAll")]
         public IActionResult Get()
         {
             List<Quotation> quotations = _db.Quotations.ToList();
+            foreach(Quotation quotation in quotations)
+            {
+                quotation.Supplier = _db.Suppliers.Find(quotation.SupplierId);
+            }
             return Ok(quotations);
         }
 
-        [HttpGet("id")]
+        [HttpGet("GetByID")]
         public IActionResult GetByID([FromQuery] int id)
         {
             Quotation? quotation = _db.Quotations.Find(id);
             if (quotation == null) return NotFound();
+            quotation.Supplier = _db.Suppliers.Find(quotation.SupplierId);
             return Ok(quotation);
         }
+
 
         [HttpPost]
         public IActionResult Create([FromBody] Quotation quotation)
@@ -42,9 +46,9 @@ namespace SITechnicalTest_API.Controllers
         }
 
         [HttpPut]
-        public IActionResult Put([FromQuery] int id, [FromBody] Quotation updatedQuotation)
+        public IActionResult Put([FromBody] Quotation updatedQuotation)
         {
-            Quotation? existingQuotation = _db.Quotations.Find(id);
+            Quotation? existingQuotation = _db.Quotations.Find(updatedQuotation.QuotationId);
 
             if (existingQuotation == null) return NotFound();
             existingQuotation.Product = updatedQuotation.Product;   

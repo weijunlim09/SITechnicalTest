@@ -1,16 +1,15 @@
-﻿@* @model List<IGrouping<int, DbQuotation>>
+﻿@model List<Quotation>
 <div class="container">
     <div class="row pt-4">
         <div class="col-6">
             <h2 class="text-primary">Quotation List</h2>
         </div>
         <div class="col-6 text-end p-4">
-            <a asp-controller="Quotation" asp-action="Create" class="btn btn-primary">
+            <a asp-controller="Quotation" asp-action="CreateQuotation" class="btn btn-primary">
                 <i class="bi bi-plus-circle"></i> Create
             </a>
         </div>
     </div>
-
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
@@ -20,32 +19,38 @@
         </thead>
         <tbody>
             @{
-                var sortedGroups = Model.OrderByDescending(group => group.First().SupplierId); // Sort groups by supplier name (key)
+                var groupQuotation = Model.GroupBy(x => x.SupplierId);
             }
-            @foreach (var group in sortedGroups)
+            @foreach (var group in groupQuotation)
             {
-                // Sort the items within the group by product (descending) and then by description
-                var sortedItems = group.OrderByDescending(item => item.Product);
-                foreach (var item in sortedItems)
+                var items = group.OrderByDescending(x => x.SupplierId).OrderBy(a => a.Product);
+
+                foreach(Quotation item in items)
                 {
                     <tr>
-                        @if (item == sortedItems.First()) // Display the supplier name in the first row of each group
+                        @if(item == items.First())
                         {
-                            <td rowspan="@group.Count()">@group.First().SupplierId</td>
+                            <td rowspan="@group.Count()">@group.First().Supplier.Name</td>
                         }
-                        <td>
-                            @item.Product: $@item.CostPerUnit
-                            <a asp-controller="Quotation" asp-action="Update" asp-route-QuotationId="@item.QuotationId" class="btn btn-primary mx-2"> 
-                                <span>Edit</span>
-                            </a>
-                            <a asp-controller="Quotation" asp-action="Delete" asp-route-QuotationId="@item.QuotationId" class="btn btn-primary mx-2">
-                                <span>Delete</span>
-                            </a>
-                        </td>
+                        @if(item.CostPerUnit != null)
+                        {
+                            <td>
+                                @item.Product: $@item.CostPerUnit
+                                <a asp-controller="Quotation" asp-action="Preview" asp-route-QuotationId="@item.QuotationId" class="btn btn-primary mx-2">
+                                    <span>Show</span>
+                                </a>
+                                <a asp-controller="Quotation" asp-action="Update" asp-route-QuotationId="@item.QuotationId" class="btn btn-primary mx-2">
+                                    <span>Edit</span>
+                                </a>
+                                <a asp-controller="Quotation" asp-action="Delete" asp-route-QuotationId="@item.QuotationId" class="btn btn-primary mx-2">
+                                    <span>Delete</span>
+                                </a>
+                            </td>
+                        }
                     </tr>
                 }
             }
+            
         </tbody>
-    </table>
-
-</div> *@
+    </table> 
+</div>
