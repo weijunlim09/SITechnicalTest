@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using SITechnicalTest_API.Core;
+using SITechnicalTest_API.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +14,7 @@ builder.Services.AddDbContext<SITechnicalTest_API.Data.ApplicationDbContext>(opt
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
 var app = builder.Build();

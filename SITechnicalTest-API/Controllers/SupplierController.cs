@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SITechnicalTest_API.Core;
 using SITechnicalTest_API.Data;
 using SITechnicalTest_API.Models;
 
@@ -10,62 +11,51 @@ namespace SITechnicalTest_API.Controllers
     [Route("[controller]")]
     public class SupplierController : ControllerBase
     {
-        private readonly ApplicationDbContext _db;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public SupplierController(ApplicationDbContext db)
+        public SupplierController(IUnitOfWork unitOfWork)
         {
-            _db = db;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet("GetAll")]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            List<Supplier> suppliers = _db.Suppliers.ToList();
+            IEnumerable<Supplier> suppliers = await _unitOfWork.SupplierRepository.GetAll();
             return Ok(suppliers);
         }
 
         [HttpGet("GetByID")]
-        public IActionResult GetByID([FromQuery] int id)
+        public async Task<IActionResult> GetByID([FromQuery] int id)
         {
-            Supplier? supplier = _db.Suppliers.Find(id);
-            if (supplier == null) return NotFound();
+            Supplier? supplier = await _unitOfWork.SupplierRepository.GetByID(id);
             return Ok(supplier);
         }
-        
+
         [HttpPost]
-        public IActionResult Create([FromBody] Supplier supplier)
+        public async Task<IActionResult> Create([FromBody] Supplier supplier)
         {
-            _db.Suppliers.Add(supplier);
-            _db.SaveChanges();
+            await _unitOfWork.SupplierRepository.Add(supplier);
+            await _unitOfWork.CompleteAsync();
             return NoContent();
         }
-        
+
         [HttpPut]
-        public IActionResult Put([FromBody] Supplier updatedSupplier)
+        public async Task<IActionResult> Update([FromBody] Supplier updatedSupplier)
         {
-            Supplier? existingSupplier = _db.Suppliers.Find(updatedSupplier.Id);
-
-            if (existingSupplier == null) return NotFound();
-            existingSupplier.Name = updatedSupplier.Name;
-            existingSupplier.Email = updatedSupplier.Email;
-            existingSupplier.CountryCode = updatedSupplier.CountryCode;
-            _db.Suppliers.Update(existingSupplier);
-            _db.SaveChanges();
-
+            await _unitOfWork.SupplierRepository.Update(updatedSupplier);
+            await _unitOfWork.CompleteAsync();
             return NoContent();
         }
-        
         [HttpDelete]
-        public IActionResult Delete([FromQuery] int id)
+        public async Task<IActionResult> Delete([FromQuery] int id)
         {
             if (id < 0) return BadRequest();
-            Supplier? sup = _db.Suppliers.Find(id);
-            if (sup == null) return NotFound(id);
-            _db.Suppliers.Remove(sup);
-            _db.SaveChanges();
+            Supplier? supplier = await _unitOfWork.SupplierRepository.GetByID(id);
+            if (supplier == null) return NotFound();
+            await _unitOfWork.SupplierRepository.Delete(supplier);
+            await _unitOfWork.CompleteAsync();
             return NoContent();
         }
     }
-
-
 }
