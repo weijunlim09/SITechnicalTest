@@ -1,23 +1,24 @@
-using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
 using SITechnicalTest.Interfaces;
 using SITechnicalTest.Services;
-using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
+
 builder.Services.AddHttpClient<ISupplierService, SupplierService>(client =>
 {
     client.BaseAddress = new Uri($"{builder.Configuration["APIBaseAddress"]}");
 });
+
 builder.Services.AddHttpClient<IQuotationService, QuotationService>(client =>
 {
     client.BaseAddress = new Uri($"{builder.Configuration["APIBaseAddress"]}");
 });
+
+//builder.Services.AddTiming();
 
 var app = builder.Build();
 
@@ -29,6 +30,24 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+//app.UseTiming();
+
+//app.UseMiddleware<TimingMiddleware>();
+
+//app.Use(async (context, next) =>
+//{
+//    var start = DateTime.UtcNow;
+//    await next.Invoke(context);
+//    app.Logger.LogInformation($"Request Duration : {(DateTime.UtcNow - start).TotalMilliseconds} ms");
+//});
+
+
+//app.Use((HttpContext context, Func<Task> next) =>
+//{
+//    app.Logger.LogInformation("Terminating the Request");
+//    return Task.CompletedTask;
+//});
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
@@ -39,5 +58,6 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
 
 app.Run();
